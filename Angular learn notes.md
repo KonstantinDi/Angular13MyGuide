@@ -51,14 +51,14 @@ src будет записано то что лежит в переменной i
       red: backgroundToggle, // если backgroundToggle === true тогда используем класс red
       blue: !backgroundToggle} // если backgroundToggle !== true тогда используем класс blue
     >
-    Texttexttext
+    Teletexts
     </p>
 
     <p
       [class.blue]="!backgroundToggle"
       [class.red]="backgroundToggle"
     >
-    Texttexttext
+    Teletexts
     </p>
 
 
@@ -83,9 +83,9 @@ src будет записано то что лежит в переменной i
     <button (click)="toggle = 1234">Toggle default</button>
     
     <div [ngSwitch]="toggle"> // в зависимости от совпадения условия будет показываться определенный html
-      <p *ngSwitchCase="true">Prelorem.</p> 
-      <p *ngSwitchCase="false">LoremBlue.</p>
-      <p *ngSwitchDefault>Lorem Xrelorem.</p>
+      <p *ngSwitchCase="true">Text.</p> 
+      <p *ngSwitchCase="false">Text.</p>
+      <p *ngSwitchDefault>Text.</p>
     </div>
 
 ### Директива *ngFor дляя итерирования циклов в html
@@ -4871,7 +4871,7 @@ Subject это тот же самый Observable с помощьюкоторог
 То есть при создании стрима из Observable на события можно было только подписываться, т.е. эммитяться события внутри самого класса
 Observable, а в подпискеу уже идет получение значения (хотя и там его обработать можно, как душе угодно).
 
-    const {Subject} = require("rxjs");
+    import {Subject} from "rxjs";
     
     document.addEventListener('click',() => {
     
@@ -4882,3 +4882,79 @@ Observable, а в подпискеу уже идет получение знач
         // колличество эммитов не ограничено.
     
     })
+
+        
+
+BehaviorSubject - тот же Subject только то что кладеться в конструктор эммитеться первым.
+
+    import {BehaviorSubject} from "rxjs";
+
+    document.addEventListener('click',() => {
+
+        const stream2$ = new BehaviorSubject('Fist of all') // Работает так же как обычный Subject только у него есть значение по умолчанию, выводимое первым,
+        stream2$.subscribe({next: value => console.log(value)})
+        stream2$.next('Hello'); 
+    })
+
+ReplaySubject - еще одна вариация Subject со своими особенностями в комментариях.
+
+    import { ReplaySubject} from "rxjs";
+
+    document.addEventListener('click',() => {
+
+        //Отличаеться тем что может воспроизвести заэмиченные события до момента подписки, чем тогда от Observable отличаеться зх.
+        // Так же  есть буффер, длинна которого задаеться в констуркторе при создании экзепляра класса.
+        const stream3$ = new ReplaySubject(1) // значит будет выводиться только последнее заэммиченое значение Hellossss3.
+
+        stream3$.next('Hellossss1');
+        stream3$.next('Hellossss2');
+        stream3$.next('Hellossss3');
+
+        stream3$.subscribe({next: value => console.log(value)})
+    })
+
+
+### Rxjs. Пример работы методов (операторов) fromEvent, interval, reduce, switchMap, takeWhile , tap, filter, map, take, takeLast, scan
+
+        import {fromEvent, interval, reduce, switchMap, takeWhile} from 'rxjs'
+        import {tap, filter, map, take, takeLast, scan} from "rxjs/operators";
+        
+        const stream$ = interval(500)
+            .pipe(
+                // данные методы (операторы потока) служат для обработки данных в стриме
+                tap(value => console.log('Tap :',value)), // добавляе сторонний эфект, который участвует во всех итерациях, хорошо использовать для дебага
+                map(value => value * 3), // перебирает каждый элемент потока
+                filter(value => value % 7 === 0), // фильтрует элементы потока по условию
+                take(5), // заканчивает стрим после указанного в параметре номера элемента стрима
+                takeLast(5), // вернет в метод next только последние 5 значений стрима
+                takeWhile(value => value < 7), // аналог оператора take, толькьо стрим будет выводить значения до указанного условия
+                scan((acc,val)=> acc + val), // похож на reduce для массивов в js
+                reduce((acc,val)=> acc + val) // срабатывает когда стрим завершается (для этого take нужно применить)
+        
+            )
+        
+        stream$.subscribe({
+            next: value => console.log('Next: ', value),
+            complete: () => console.log('Complete')
+        })
+        
+        
+        /*Пример с использованием стрима fromEvent, устанавливаем событие по клику, сдесь особенность в том что
+        * при клике в стриме мы получем объект event, но он не нужен, а нужно произвести действие по клику, в данном
+        * случае для этого используеться метод switchMap, в котором мы подменяем стрим fromEvent на стрим interval
+        * и в конечном методе подписки, уже выводим данные из этого стрима обработав их стандарными операторами*/
+        fromEvent(document, 'click')
+            .pipe(
+                switchMap(event => {
+                    return interval(1000)
+                        .pipe(
+                            tap(value => console.log('Tap :',value)),
+                            take(5),
+                            reduce((acc,val)=> acc + val)
+                        )
+                })
+            )
+            .subscribe({
+                next: value => console.log('Next2: ',value),
+                complete: () => console.log('Complete')
+            })
