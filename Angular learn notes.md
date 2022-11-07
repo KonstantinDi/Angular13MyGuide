@@ -41,8 +41,8 @@ src будет записано то что лежит в переменной i
 
 ### директива ngStyle и ее аналог:
 
-Сдесь показаны 2 варианата , 
-- 1 - это использовани директивы ngStyle с объектом в котором
+Здесь показаны 2 варианата , 
+- 1 - это использование директивы ngStyle с объектом в котором
 в зависимости от значения переменной будет применен опредленный класс для тега <p>
 - 2 - смысл тот же но синтаксис применения другой.
 
@@ -67,7 +67,7 @@ src будет записано то что лежит в переменной i
 Это структурная директива, то есть влияющая на отображаемый html об этом говорит *, 
 тут показан пример, где используеться конструкция if else
 
-    <p *ngIf="toggle; else *ngIf="toggle; else blueP" class="red">Lorem Prosto</p> 
+    <p *ngIf="toggle; else blueP" class="red">Lorem Prosto</p> 
     /* 
     *ngIf="toggle; else blueP - эта запись означает, если toggle === true, 
     тогда показывать этот тэг <p>, в ином случае показывать тег со ссылкой blueP
@@ -81,14 +81,15 @@ src будет записано то что лежит в переменной i
 
     <button (click)="toggle = !toggle">Toggle</button>
     <button (click)="toggle = 1234">Toggle default</button>
-    
+    <p>{{toggle}}</p>
+
     <div [ngSwitch]="toggle"> // в зависимости от совпадения условия будет показываться определенный html
-      <p *ngSwitchCase="true">Text.</p> 
-      <p *ngSwitchCase="false">Text.</p>
-      <p *ngSwitchDefault>Text.</p>
+      <p *ngSwitchCase="true">Text1.</p> 
+      <p *ngSwitchCase="false">Text2.</p>
+      <p *ngSwitchDefault ="1234">Text3.</p>
     </div>
 
-### Директива *ngFor дляя итерирования циклов в html
+### Директива *ngFor для итерирования циклов в html
 
 Позволяет вывести массив либо объект, а так же можно вложенныйй объект или массив вывести:
 
@@ -222,7 +223,7 @@ html компонента ребенка (два инпута, с кнопкой
       <hr/>
     </div>
 
-ts код компоннта ребенка - важная часть EventEmitter, специальный класс, 
+ts код компонета ребенка - важная часть EventEmitter, специальный класс, 
 который выполняет функцию передачи данных наверх с помощью метода emit(). Запускаем
 этот метод в методе отвечающем за обрботку нажатия кнопки, и передаем в метод emit(data) перменную
 с данными как параметр
@@ -314,7 +315,7 @@ ts компонента родителя:
     }
     }
 
-### Доступ до HTML улументов через #ссылку в angular
+### Доступ до HTML элементов через #ссылку в angular
 
 К тегу формы в input добавляем ссылку #titleInput она будет указывать
 на объект этого тега.
@@ -496,7 +497,7 @@ html компонента ребенка:
       }
 
     /* Вызывается сразу после ngOnChanges() при каждом запуске обнаружения изменений и сразу после ngOnInit()
-    при первом запуске. Используеться для проверок данных н что либо */
+    при первом запуске. Используеться для проверок данных на что либо */
     ngDoCheck(): void {
     console.log('DoCheck');
     }
@@ -981,8 +982,8 @@ ts директивы:
         
         // templateRef содержит html блока к которому применена директива
         // ViewContainerRef содержит ссылку на контейнер
-        constructor(private templateRef: TemplateRef<any>,
-        private viewContainer: ViewContainerRef) { }
+         
+        constructor( private templateRef: TemplateRef<any>, private viewContainer: ViewContainerRef ) { }
     
     }
 
@@ -1169,7 +1170,7 @@ ng g p pipes/filter --skip-tests
 
 ### Оптимизация пайпов, Динамические пайпы.
 
-Есть проблема, допустим у нас есть пойп который фильтрует посты см выше самописный пайп filter. Теперь добавили
+Есть проблема, допустим у нас есть пайп который фильтрует посты см выше самописный пайп filter. Теперь добавили
 возможность добавлять посты - нажали на кнопку добавили пост, но наш пайп не отображает этот добавленный пост, даже 
 если по фильтрации он должен был отображаться. Дело в том что по умолчанию для повышения производительности пайпы не
 перезапускаються при обновлении данных в компоненте. 
@@ -1583,7 +1584,7 @@ import {FormControl, FormGroup} from "@angular/forms";
         console.log('formData :',formData); // и выводим для наглядности их в консоле
     }
 
-### Валидация данных в контролах
+### Валидация данных в контролах - stop
 
 Для добавления валидаторов в конструктор класса FormControl можно вторым параметром добавлять либо один
 валидатор либо массив валидаторов. Вот так:
@@ -1817,7 +1818,7 @@ html, а массив с контролами будет рендериться 
       </div>
     </div>
 
-Важное дополнение, обратите внимание что *ngFor работате не с form.get('skills').controls куда мы клали
+Важное дополнение, обратите внимание что *ngFor работает не с form.get('skills').controls куда мы клали
 контролы, там возникает ошибка ts, так как объект который возвращает form.get('skills') имплемментируеться
 от абстракного класса в котором нету свойство controls, мы его исскууственно запихиваем в этот объект и ts
 ругаеться, типа абстракный класс этого не позволяет.
@@ -1880,7 +1881,7 @@ html, а массив с контролами будет рендериться 
 В app/my.validators.ts (создавали в главе выше) в классе MyValidators
 добавим еще метод
 
-     static uniqEmail(control:  AbstractControl):  Promise<ValidationErrors> | Observable<ValidationErrors> {
+     static uniqEmail(control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> {
        return new Promise(resolve=>{
          setTimeout(()=>{
            if(control.value === 'async@mail.ru'){
@@ -1973,6 +1974,266 @@ form.pending
       }
       this.form.reset(); // очистка формы
     }
+
+### Пример формы с валидацией полей
+
+Данная форма как пример формы для регистрации, поля: имя, фамилия, email, возраст, адрес проживания и навыки.
+Данная форма это компонент внутри основного компонента, так же для своей работы использует кастомный асинхронный
+валидатор, типо проверка на уже существующий email в базе данных, типо из формы при заполнения поля email отправляеться
+запрос по апи на сервере и если в бд уже есть такой еmail то вернет ошибку. 
+Также в форме есть возмоэность получить ошибку от сервера, точнее она всегда появляеться приходя из компонента
+верхнего уровня, в коде формы есть функционал для отображения такого поведения.
+
+1. Компонент формы
+
+html:
+
+    <div class="wrapper">
+      <form [formGroup]="formGroup" (ngSubmit)="submit()" (input)="onFormChange()">
+
+          <div class="inputWrap">
+              <label for="name">Name</label>
+              <input type="text" id="name" formControlName="name">
+          </div>
+          <div class="errorWrap">
+              <p *ngIf="formGroup.hasError('required','name') && formGroup.get('name')!.touched"
+              class="formError" >
+                  Name is not required
+          </p>
+          <p *ngIf="formGroup.get('name')!.errors != null && formGroup.get('name')!.errors!['minlength']" 
+              class="formError" >
+                  Name can`t be less than symbols {{formGroup.get('name')!.errors!['minlength']!.requiredLength}} symbols
+          </p>
+          </div>
+
+          <div class="inputWrap">
+              <label for="surname">Surname</label>
+              <input type="text" id="surname" formControlName="surname">
+          </div>
+          <div class="errorWrap">
+              <p *ngIf="formGroup.hasError('required','surname') && formGroup.get('surname')!.touched" 
+              class="formError">
+                  Surname is not required
+          </p>
+          <p *ngIf="formGroup.get('surname')!.errors != null && formGroup.get('surname')!.errors!['minlength'] != null"
+              class="formError">
+                  Surname can`t be less than {{formGroup.get('surname')!.errors!['minlength']!.requiredLength}} symbols
+          </p>
+          </div>
+
+          <div class="inputWrap">
+              <label for="email">Email</label>
+              <input type="text" id="email" formControlName="email">
+          </div>
+          <div class="errorWrap">
+              <p *ngIf="formGroup.hasError('required','email') && formGroup.get('email')!.touched" 
+              class="formError">
+                  Email is not required
+              </p>
+              <p *ngIf="formGroup.hasError('email','email') && formGroup.get('email')!.touched" 
+              class="formError">
+                  Email is wrong
+              </p>
+              <p *ngIf="formGroup.hasError('uniqEmail','email') && formGroup.get('email')!.touched" 
+              class="formError">
+                  This email already exists
+              </p>
+              
+          </div>
+
+          <div class="inputWrap">
+              <label for="birthDate">You birth date</label>
+              <input type="date" id="birthDate" formControlName="birthDate">
+          </div>
+          <div class="errorWrap">
+              <p  *ngIf="formGroup.get('birthDate')!.errors != null && formGroup.get('birthDate')!.touched"
+                  class="formError">
+                  Birth date is not required
+              </p>
+          </div>
+
+          <p>Residential address</p>
+
+          <div class="inputWrap">
+              <label for="country">Country</label>
+              <select id="country" (change)="onCountryChange()" formControlName="country">
+                  <option *ngFor="let countryObj of countries" value="{{countryObj.country}}">{{countryObj.country}}</option>
+              </select>
+          </div>
+          <div class="errorWrap">
+              <p  *ngIf="formGroup.get('country')!.errors != null && formGroup.get('country')!.touched"
+                  class="formError">
+                  Country is not required
+              </p>
+          </div>
+
+          <div class="inputWrap">
+          <label for="city">City</label>
+          <select id="city" formControlName="city">
+              <option *ngFor="let city of curentCitiesInForm" value="{{city}}">{{city}}</option>
+          </select>
+          </div>
+          <div class="errorWrap">
+              <p  *ngIf="formGroup.get('city')!.errors != null && formGroup.get('city')!.touched"
+                  class="formError">
+                  City is not required
+              </p>
+          </div>
+          <button (click)="addSkill()" type="button">Add skill</button>
+          <div formGroupName="skills">
+              <div *ngFor="let controll of formDataSkills!.controls; let idx = index">
+                  <div class="addNewSkill">
+                      <label >
+                          Skill {{idx + 1}}
+                      </label>
+                      <input type="text" [formControlName]="idx">
+                  </div>
+                  <p  *ngIf="formDataSkills!.controls![idx].errors != null && formDataSkills!.controls![idx].touched"
+                      class="formError">
+                          Skill is not required
+                  </p>
+              </div>
+          </div>
+
+
+          <button class="buttonSubmit" type="submit" [disabled]="formGroup.invalid || !!formError || formGroup.pending">Registration</button>
+          <p class="formError">{{formError}}</p>
+      </form>
+    </div>
+
+scss:
+
+      .wrapper{
+          width: 20%;
+          margin: auto;
+          border: 1px solid blue;
+          padding: 0px 30px 10px 30px;
+          label{
+              margin-right: 10px;
+          }
+          .inputWrap{
+              margin-top: 10px;
+              margin-bottom: 10px;
+              display: flex;
+              justify-content: space-between;
+          
+          }
+          .formError{
+              color: red;
+              margin: 0px;
+              font-size: 0.9rem;
+          }
+          .buttonSubmit{
+              margin-top: 10px;
+              width: 100%;
+          }
+          input,select{
+              width: 40%;
+          }
+          .addNewSkill{
+              display: flex;
+              justify-content: space-between;
+              margin: 10px 0px;
+          }
+      }
+
+ts
+
+      import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+      import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+      import { myValidators } from 'src/app/validators/my.validators';
+
+      @Component({
+        selector: 'app-my-form',
+        templateUrl: './my-form.component.html',
+        styleUrls: ['./my-form.component.scss']
+      })
+      export class MyFormComponent implements OnInit {
+
+        formGroup!: FormGroup
+        @Input() formError! : string; 
+        @Output() loginData = new EventEmitter();
+        
+        minNameLength = 3;
+        minSurnameLength = 3;
+        countries = [
+          {country: 'Switzerland', cities: ['Zurich', 'Geneva', 'Bern']},
+          {country: 'Norway', cities: ['Oslo', 'Alesund', 'Tronse']},
+          {country: 'Netherlands', cities: ['Amsterdam', 'Utrecht', 'Maastricht']},
+          {country: 'Portugal', cities: ['Porto', 'Lisbon', 'Coimbra']},
+          {country: 'England', cities: ['London', 'Oxford', 'Cambridge']},
+          {country: 'Germany', cities: ['Berlin', 'Munich', 'Hamburg']}
+        ]
+        curentCitiesInForm = this.countries[0].cities;
+
+        get formDataSkills():any{
+          return this.formGroup.get('skills');
+          }
+
+        constructor() { }
+
+        ngOnInit(): void {
+          this.formGroup = new FormGroup({
+            name: new FormControl('',[Validators.required,Validators.minLength(this.minNameLength)]),
+            surname: new FormControl('',[Validators.required,Validators.minLength(this.minSurnameLength)]),
+            email: new FormControl('',[Validators.email,Validators.required],[myValidators.uniqEmail]),
+            birthDate: new FormControl('',[Validators.required]),
+            country: new FormControl(this.countries[0].country,[Validators.required]),
+            city: new FormControl(this.countries[0].cities[0],[Validators.required]),
+            skills: new FormArray([])
+          })
+        }
+
+        submit(){
+          const formData = {...this.formGroup.value};
+          console.log('UI:', formData);
+          this.loginData.emit(this.formGroup.value);
+        }
+
+        onFormChange(){
+          this.formError = '';
+        }
+
+        onCountryChange(){
+          let choosedContry = this.formGroup.get('country')!.value;
+          this.curentCitiesInForm = this.countries.filter(obj=>obj.country === choosedContry)[0].cities;
+        }
+
+        addSkill(){
+          const controll = new FormControl('',[Validators.required]);
+          (this.formGroup.get('skills') as FormArray).push(controll);
+          console.log(this.formGroup.get('skills'));
+        }
+
+      }
+
+html верхнего компонента куда вставляеться компонент формы
+
+    <app-my-form [formError]="serverError" (loginData)="onLogin($event)"></app-my-form>
+
+ts верхнего компонента который взаимодействует с ts формы
+
+    import { Component, ViewChild } from '@angular/core';
+
+    @Component({
+      selector: 'app-root',
+      templateUrl: './app.component.html',
+      styleUrls: ['./app.component.scss']
+    })
+    export class AppComponent {
+
+      serverError = '';
+
+      constructor(){}
+
+      onLogin(value: any){
+        this.serverError += 'ERROR_FROM_UPPER_COMPONENT_FROM_SERVER' // искусственная ошибка сгенерированная для компонента формы
+      }
+
+    }
+
+Так же нужно добавить в основной модуль в поле declarations строчку  MyFormComponent, чтобы полключить компонент Формы.
+и в поле imports подключить ReactiveFormsModule.
 
 
 
@@ -4929,9 +5190,9 @@ ReplaySubject - еще одна вариация Subject со своими ос�
                 takeLast(5), // вернет в метод next только последние 5 значений стрима
                 takeWhile(value => value < 7), // аналог оператора take, толькьо стрим будет выводить значения до указанного условия
                 scan((acc,val)=> acc + val), // похож на reduce для массивов в js
-                reduce((acc,val)=> acc + val) // срабатывает когда стрим завершается (для этого take нужно применить)
-        
-            )
+                reduce((acc,val)=> acc + val), // срабатывает когда стрим завершается (для этого take нужно применить)
+                distinctUntilChanged()//  проверяет совпадает ли предыдщее значение с текущем, если да то метод next не сработает.          
+)
         
         stream$.subscribe({
             next: value => console.log('Next: ', value),
@@ -4958,3 +5219,38 @@ ReplaySubject - еще одна вариация Subject со своими ос�
                 next: value => console.log('Next2: ',value),
                 complete: () => console.log('Complete')
             })
+
+
+### Rxjs. Оператоторы для оптимизации запросов
+
+Есть множество операторов которые помогают оптимизировать запросы, оптимизация заключаеться в том, чтобы обзервер срабатывал
+с задержкой, либо не отправлял запрос (при поиске) если пользователь ввел в строку поиска тоже самое что и в прошлый раз.
+
+Ниже код, есть инпут - обзервер, в pipe() уже есть оптимизация
+
+    // подписываемся на события ввода данных в тег инпут
+    const search$ = fromEvent<Event>(
+      document.querySelector('#search')!,
+      'input'
+    )
+
+    // подписываемся событие срабатывания кнопки стоп, которая сотанавливает поток - обзервер инпута и свой.
+    const stop$ = fromEvent<Event>(
+      document.querySelector('#stop')!,
+      'click'
+    )
+
+     search$
+      .pipe(
+        map((event)=>{ return (event.target as HTMLInputElement).value}),
+        debounceTime(500), // данные будут передаваться через пол сикунды как пользователь остановит ввод в инпут
+        distinctUntilChanged(), // если предыдущий ввод данных был такой же, то обзервер не станет отрабатывать
+        takeUntil(stop$) // Важный момент!, сдесь мы говорим что данный обзервер будет работать до тех пор, пока не наступит события другово
+        // обзервера, то есть допустим в инпуте - обзервере будут отслеживаться изменения, до тех пор пока не будт нажата
+        // какая либо кнопка, в данном случае кнопка stop$
+      )
+      .subscribe({
+      next: value => console.log(value),
+      error: err => console.log(err),
+      complete: () => console.log('complete')
+    })
